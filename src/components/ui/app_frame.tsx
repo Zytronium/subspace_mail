@@ -2,15 +2,18 @@ import { twMerge } from "tailwind-merge";
 
 function App_frame({
   className,
+  children,
   ...props
-}: React.ComponentProps<"svg">) {
+}: { children?: React.ReactNode } & React.ComponentProps<"div">) {
   return (
-    <svg
-      {...props}
-      className={twMerge(["absolute inset-0 size-full pointer-events-none", className])}
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="none"
-    >
+    <div className={twMerge(["relative h-screen w-screen flex flex-col overflow-hidden bg-slate-950", className])} {...props}>
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <svg
+          className="size-full"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          viewBox="0 0 1000 1000"
+        >
       <defs>
         {/* Gradients */}
         <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -45,7 +48,7 @@ function App_frame({
 
       {/* Corner accents - top right */}
       <path
-        d="M 100%,0 L calc(100% - 200px),0 L calc(100% - 220px),20 L calc(100% - 220px),100"
+        d="M 1000,0 L 800,0 L 780,20 L 780,100"
         stroke="rgba(139, 92, 246, 0.4)"
         strokeWidth="2"
         fill="none"
@@ -53,7 +56,7 @@ function App_frame({
 
       {/* Corner accents - bottom left */}
       <path
-        d="M 0,100% L 0,calc(100% - 200px) L 20,calc(100% - 220px) L 100,calc(100% - 220px)"
+        d="M 0,1000 L 0,800 L 20,780 L 100,780"
         stroke="rgba(59, 130, 246, 0.4)"
         strokeWidth="2"
         fill="none"
@@ -61,7 +64,7 @@ function App_frame({
 
       {/* Corner accents - bottom right */}
       <path
-        d="M 100%,100% L 100%,calc(100% - 200px) L calc(100% - 20px),calc(100% - 220px) L calc(100% - 100px),calc(100% - 220px)"
+        d="M 1000,1000 L 1000,800 L 980,780 L 900,780"
         stroke="rgba(139, 92, 246, 0.4)"
         strokeWidth="2"
         fill="none"
@@ -147,7 +150,12 @@ function App_frame({
           repeatCount="indefinite"
         />
       </line>
-    </svg>
+      </svg>
+      </div>
+      <div className="relative z-10 size-full overflow-hidden flex flex-col bg-transparent">
+        {children}
+      </div>
+    </div>
   );
 }
 

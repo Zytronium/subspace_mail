@@ -7,8 +7,9 @@ function Frame({
   className,
   paths,
   children,
+  padding = true,
   ...props
-}: { paths: Paths; children?: React.ReactNode } & React.ComponentProps<"svg">) {
+}: { paths: Paths; children?: React.ReactNode; padding?: boolean } & React.ComponentProps<"svg">) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
@@ -23,18 +24,16 @@ function Frame({
   }, [paths]);
 
   return (
-    <div className="relative size-full">
+    <div className={twMerge(["relative", className])}>
       <svg
         {...props}
-        className={twMerge(["absolute inset-0 size-full", className])}
+        className="absolute inset-0 size-full pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"
         ref={svgRef}
       />
-      {children && (
-        <div className="relative z-10 size-full p-4">
-          {children}
-        </div>
-      )}
+      <div className={twMerge(["relative z-10 w-full h-full", padding && "p-6"])}>
+        {children}
+      </div>
     </div>
   );
 }

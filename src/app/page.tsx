@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useEmailStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
+import { Frame } from '@/components/ui/frame';
 import Sidebar from '@/components/Sidebar';
 import EmailList from '@/components/EmailList';
 import EmailViewer from '@/components/EmailViewer';
@@ -36,77 +37,82 @@ export default function Home() {
 
   if (!isElectron) {
     return (
-      <div className="relative flex items-center justify-center h-screen bg-slate-950 text-white overflow-hidden">
-        <AppFrame className="opacity-30" />
-        <div className="relative z-10 text-center">
-          <h1 className="text-4xl font-bold gradient-text mb-4">Subspace Mail</h1>
-          <p className="text-gray-400">Please run in Electron environment</p>
+      <AppFrame className="bg-slate-950 text-white">
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold gradient-text mb-4">Subspace Mail</h1>
+            <p className="text-gray-400">Please run in Electron environment</p>
+          </div>
         </div>
-      </div>
+      </AppFrame>
     );
   }
 
   if (accounts.length === 0 || showAccountSetup) {
     return (
-      <div className="relative h-screen overflow-hidden">
-        <AppFrame className="opacity-20" />
+      <AppFrame>
         <AccountSetup onClose={() => setShowAccountSetup(false)} />
-      </div>
+      </AppFrame>
     );
   }
 
   return (
-    <div className="relative flex flex-col h-screen bg-background text-white overflow-hidden z-11">
-      {/* Content layer - relative z-index to appear above frame */}
-      <div className="relative z-10 flex flex-col h-screen">
-        {/* Custom Title Bar */}
-        <div className="flex items-center justify-between h-12 px-4 bg-black/40 border-b border-white/10 drag-region">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <span className="text-sm font-bold">SM</span>
-            </div>
-            <span className="text-sm font-semibold">Subspace Mail</span>
-          </div>
-
-          <div className="flex items-center gap-2 no-drag">
-            <Button
-              shape="flat"
-              variant="secondary"
-              onClick={() => window.electron.window.minimize()}
-              className="w-8 h-8 p-0 text-xl flex items-center justify-center"
-            >
-              −
-            </Button>
-            <Button
-              shape="flat"
-              variant="success"
-              onClick={() => window.electron.window.maximize()}
-              className="w-8 h-8 p-0 text-xl flex items-center justify-center"
-            >
-              □
-            </Button>
-            <Button
-              shape="flat"
-              variant="destructive"
-              onClick={() => window.electron.window.close()}
-              className="w-8 h-8 p-0 text-xl flex items-center justify-center"
-            >
-              ×
-            </Button>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex flex-1 overflow-hidden">
-          <Sidebar onAddAccount={() => setShowAccountSetup(true)} />
-          <EmailList />
-          {isComposing ? (
-            <Compose onClose={() => setIsComposing(false)} />
-          ) : (
-            <EmailViewer email={selectedEmail} />
+    <AppFrame className="bg-background text-white">
+      {/* Custom Title Bar */}
+      <div className="relative h-12 drag-region">
+        <Frame
+          paths={JSON.parse(
+            '[{"show":true,"style":{"strokeWidth":"1","stroke":"rgba(255,255,255,0.1)","fill":"transparent"},"path":[["M","0","100%"],["L","100%","100%"]]}]'
           )}
-        </div>
+        >
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <span className="text-sm font-bold">SM</span>
+              </div>
+              <span className="text-sm font-semibold">Subspace Mail</span>
+            </div>
+
+            <div className="flex items-center gap-2 no-drag">
+              <Button
+                shape="flat"
+                variant="secondary"
+                onClick={() => window.electron.window.minimize()}
+                className="w-8 h-8 p-0 text-xl flex items-center justify-center"
+              >
+                −
+              </Button>
+              <Button
+                shape="flat"
+                variant="success"
+                onClick={() => window.electron.window.maximize()}
+                className="w-8 h-8 p-0 text-xl flex items-center justify-center"
+              >
+                □
+              </Button>
+              <Button
+                shape="flat"
+                variant="destructive"
+                onClick={() => window.electron.window.close()}
+                className="w-8 h-8 p-0 text-xl flex items-center justify-center"
+              >
+                ×
+              </Button>
+            </div>
+          </div>
+        </Frame>
       </div>
-    </div>
+
+      {/* Main Content */}
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar onAddAccount={() => setShowAccountSetup(true)} />
+        <EmailList />
+        {isComposing ? (
+          <Compose onClose={() => setIsComposing(false)} />
+        ) : (
+          <EmailViewer email={selectedEmail} />
+        )}
+      </div>
+    </AppFrame>
   );
 }
