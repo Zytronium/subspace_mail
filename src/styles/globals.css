@@ -3,11 +3,29 @@
 @import "tailwindcss";
 
 @theme {
-    --color-background: #0a0a0f;
-    --color-foreground: #ffffff;
-    --color-primary: #3b82f6;
-    --color-secondary: #8b5cf6;
-    --color-accent: #06b6d4;
+    --color-primary: rgb(20, 160, 230);
+    --color-primary-foreground: rgb(255, 255, 255);
+    --color-accent: rgb(202, 65, 34);
+    --color-accent-foreground: rgb(255, 255, 255);
+    --color-secondary: --alpha(
+            color-mix(in oklab, var(--color-primary), var(--color-white) 50%) / 60%
+    );
+    --color-secondary-foreground: color-mix(
+            in oklab,
+            var(--color-primary),
+            var(--color-white) 70%
+    );
+    --color-destructive: var(--color-rose-500);
+    --color-destructive-foreground: rgb(255, 255, 255);
+    --color-success: var(--color-teal-500);
+    --color-success-foreground: rgb(255, 255, 255);
+    --color-background: color-mix(
+            in oklab,
+            var(--color-primary),
+            var(--color-black) 80%
+    );
+    --color-foreground: var(--color-white);
+
 }
 
 * {

@@ -12,7 +12,7 @@ interface EmailViewerProps {
 export default function EmailViewer({ email }: EmailViewerProps) {
   if (!email) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-black/20">
+      <div className="flex-1 flex items-center justify-center">
         <div className="text-center text-gray-400">
           <p className="text-lg mb-2">No email selected</p>
           <p className="text-sm">Select an email from the list to view</p>
@@ -33,7 +33,7 @@ export default function EmailViewer({ email }: EmailViewerProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-black/20 overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-start justify-between mb-4">

@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useEmailStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
@@ -57,10 +56,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative flex flex-col h-screen bg-slate-950 text-white overflow-hidden">
-      {/* Full window animated frame background */}
-      <AppFrame className="opacity-20" />
-
+    <div className="relative flex flex-col h-screen bg-background text-white overflow-hidden z-11">
       {/* Content layer - relative z-index to appear above frame */}
       <div className="relative z-10 flex flex-col h-screen">
         {/* Custom Title Bar */}
@@ -83,7 +79,7 @@ export default function Home() {
             </Button>
             <Button
               shape="flat"
-              variant="secondary"
+              variant="success"
               onClick={() => window.electron.window.maximize()}
               className="w-8 h-8 p-0 text-xl flex items-center justify-center"
             >

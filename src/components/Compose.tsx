@@ -56,7 +56,7 @@ export default function Compose({ onClose }: ComposeProps) {
 
   return (
     <>
-      <div className="flex-1 flex flex-col bg-black/30 border-l border-white/10 animate-slide-in">
+      <div className="flex-1 flex flex-col border-l border-white/10 animate-slide-in">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h2 className="text-xl font-bold gradient-text">New Message</h2>

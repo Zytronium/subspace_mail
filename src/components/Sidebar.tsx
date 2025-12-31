@@ -4,6 +4,7 @@ import { useEmailStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { MenuRoot, MenuTrigger, MenuPositioner, MenuContent, MenuItem } from '@/components/ui/menu';
 import { Inbox, Send, Archive, Trash2, Settings, Plus, ChevronDown } from 'lucide-react';
+import { router } from "next/dist/client";
 
 interface SidebarProps {
   onAddAccount: () => void;
@@ -109,6 +110,7 @@ export default function Sidebar({ onAddAccount }: SidebarProps) {
           variant="secondary"
           shape="simple"
           className="w-full"
+          onClick={() => {window.location.href = "/settings"; router.reload();}}
         >
           <Settings className="size-4 mr-2" />
           Settings

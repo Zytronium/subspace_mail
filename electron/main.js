@@ -14,10 +14,10 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1600,
-    height: 1000,
-    minWidth: 1200,
-    minHeight: 700,
+    width: 1200,
+    height: 700,
+    minWidth: 600,
+    minHeight: 350,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
