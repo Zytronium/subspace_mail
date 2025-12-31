@@ -7,7 +7,7 @@ import EmailList from '@/components/EmailList';
 import EmailViewer from '@/components/EmailViewer';
 import Compose from '@/components/Compose';
 import AccountSetup from '@/components/AccountSetup';
-import { Frame } from '@/components/ui/frame';
+import { App_frame as AppFrame } from '@/components/ui/app_frame';
 
 export default function Home() {
   const {
@@ -37,7 +37,7 @@ export default function Home() {
   if (!isElectron) {
     return (
       <div className="relative flex items-center justify-center h-screen bg-slate-950 text-white overflow-hidden">
-        <Frame className="opacity-30" />
+        <AppFrame className="opacity-30" />
         <div className="relative z-10 text-center">
           <h1 className="text-4xl font-bold gradient-text mb-4">Subspace Mail</h1>
           <p className="text-gray-400">Please run in Electron environment</p>
@@ -49,7 +49,7 @@ export default function Home() {
   if (accounts.length === 0 || showAccountSetup) {
     return (
       <div className="relative h-screen overflow-hidden">
-        <Frame className="opacity-20" />
+        <AppFrame className="opacity-20" />
         <AccountSetup onClose={() => setShowAccountSetup(false)} />
       </div>
     );
@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <div className="relative flex flex-col h-screen bg-slate-950 text-white overflow-hidden">
       {/* Full window animated frame background */}
-      <Frame className="opacity-20" />
+      <AppFrame className="opacity-20" />
 
       {/* Content layer - relative z-index to appear above frame */}
       <div className="relative z-10 flex flex-col h-screen">
