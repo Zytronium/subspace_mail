@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useEmailStore } from '@/lib/store';
+import { Button } from '@/components/ui/button';
 import Sidebar from '@/components/Sidebar';
 import EmailList from '@/components/EmailList';
 import EmailViewer from '@/components/EmailViewer';
@@ -72,24 +73,30 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2 no-drag">
-            <button
+            <Button
+              shape="flat"
+              variant="secondary"
               onClick={() => window.electron.window.minimize()}
-              className="w-8 h-8 rounded hover:bg-white/10 flex items-center justify-center transition"
+              className="w-8 h-8 p-0 text-xl flex items-center justify-center"
             >
-              <span className="text-xl">−</span>
-            </button>
-            <button
+              −
+            </Button>
+            <Button
+              shape="flat"
+              variant="secondary"
               onClick={() => window.electron.window.maximize()}
-              className="w-8 h-8 rounded hover:bg-white/10 flex items-center justify-center transition"
+              className="w-8 h-8 p-0 text-xl flex items-center justify-center"
             >
-              <span className="text-xl">□</span>
-            </button>
-            <button
+              □
+            </Button>
+            <Button
+              shape="flat"
+              variant="destructive"
               onClick={() => window.electron.window.close()}
-              className="w-8 h-8 rounded hover:bg-red-500/20 flex items-center justify-center transition"
+              className="w-8 h-8 p-0 text-xl flex items-center justify-center"
             >
-              <span className="text-xl">×</span>
-            </button>
+              ×
+            </Button>
           </div>
         </div>
 

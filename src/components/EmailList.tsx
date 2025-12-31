@@ -1,101 +1,126 @@
 'use client';
 
 import { useEmailStore } from '@/lib/store';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { RefreshCw, Search } from 'lucide-react';
+import { useState } from 'react';
 
 export default function EmailList() {
-  const { emails, selectedEmail, setSelectedEmail, isLoading } = useEmailStore();
+  const { emails, selectedEmail, setSelectedEmail, fetchEmails, isLoading } = useEmailStore();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredEmails = emails.filter((email) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      email.subject.toLowerCase().includes(query) ||
+      email.from.toLowerCase().includes(query) ||
+      email.snippet.toLowerCase().includes(query)
+    );
+  });
 
   const formatDate = (date: Date) => {
-    try {
-      const now = new Date();
-      const diffInSeconds = Math.floor((now.getTime() - new Date(date).getTime()) / 1000);
+    const now = new Date();
+    const emailDate = new Date(date);
+    const diffInHours = (now.getTime() - emailDate.getTime()) / (1000 * 60 * 60);
 
-      if (diffInSeconds < 60) return 'just now';
-      if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-      if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-      if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-      return new Date(date).toLocaleDateString();
-    } catch {
-      return 'Unknown';
+    if (diffInHours < 24) {
+      return emailDate.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+      });
+    } else if (diffInHours < 168) {
+      return emailDate.toLocaleDateString('en-US', { weekday: 'short' });
+    } else {
+      return emailDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
     }
   };
 
-  const extractName = (emailString: string) => {
-    const match = emailString.match(/^(.*?)\s*</);
-    return match ? match[1].trim() : emailString.split('@')[0];
-  };
-
-  if (isLoading) {
-    return (
-      <div className="w-96 border-r border-white/10 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading emails...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-96 bg-black/10 border-r border-white/10 flex flex-col">
-      {/* Search Bar */}
+    <div className="w-96 bg-black/30 border-r border-white/10 flex flex-col">
+      {/* Header */}
       <div className="p-4 border-b border-white/10">
+        <div className="flex items-center gap-2 mb-3">
+          <h2 className="text-xl font-bold flex-1">Inbox</h2>
+          <Button
+            shape="flat"
+            variant="secondary"
+            onClick={() => fetchEmails()}
+            disabled={isLoading}
+            className="px-3 py-1.5"
+          >
+            <RefreshCw className={`size-4 ${isLoading ? 'animate-spin' : ''}`} />
+          </Button>
+        </div>
+
         <div className="relative">
-          <input
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400 pointer-events-none" />
+          <Input
             type="text"
             placeholder="Search emails..."
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
           />
-          <svg
-            className="w-5 h-5 absolute left-3 top-2.5 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
         </div>
       </div>
 
       {/* Email List */}
       <div className="flex-1 overflow-y-auto">
-        {emails.length === 0 ? (
+        {filteredEmails.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-400">
             <div className="text-center">
-              <p>No emails</p>
-              <p className="text-sm">Try refreshing or check your connection</p>
+              <p className="text-lg mb-2">No emails found</p>
+              <p className="text-sm">
+                {searchQuery
+                  ? 'Try a different search query'
+                  : 'Your inbox is empty'}
+              </p>
             </div>
           </div>
         ) : (
-          emails.map((email) => (
-            <button
-              key={email.id}
-              onClick={() => setSelectedEmail(email)}
-              className={`w-full p-4 border-b border-white/5 hover:bg-white/5 transition text-left ${
-                selectedEmail?.id === email.id ? 'bg-white/10' : ''
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                {email.unread && <div className="unread-dot mt-2"></div>}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-sm font-semibold truncate ${email.unread ? 'text-white' : 'text-gray-300'}`}>
-                      {extractName(email.from)}
-                    </span>
-                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
-                      {formatDate(email.date)}
-                    </span>
-                  </div>
-                  <div className={`text-sm mb-1 truncate ${email.unread ? 'font-medium' : 'text-gray-400'}`}>
-                    {email.subject || '(No Subject)'}
-                  </div>
-                  <div className="text-xs text-gray-500 line-clamp-2">
-                    {email.snippet}
+          <div className="divide-y divide-white/5">
+            {filteredEmails.map((email) => (
+              <button
+                key={email.id}
+                onClick={() => setSelectedEmail(email)}
+                className={`w-full text-left p-4 transition hover:bg-white/5 ${
+                  selectedEmail?.id === email.id ? 'bg-white/10' : ''
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  {email.unread && <div className="unread-dot mt-2" />}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between mb-1">
+                      <span
+                        className={`font-medium truncate ${
+                          email.unread ? 'text-white' : 'text-gray-300'
+                        }`}
+                      >
+                        {email.from}
+                      </span>
+                      <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                        {formatDate(email.date)}
+                      </span>
+                    </div>
+                    <div
+                      className={`text-sm mb-1 truncate ${
+                        email.unread ? 'font-medium' : ''
+                      }`}
+                    >
+                      {email.subject}
+                    </div>
+                    <div className="text-sm text-gray-500 truncate">
+                      {email.snippet}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </button>
-          ))
+              </button>
+            ))}
+          </div>
         )}
       </div>
     </div>
