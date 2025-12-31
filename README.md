@@ -273,4 +273,4 @@ none yet.
 
 ---
 
-Built with ❤️ using Next.js, Electron, and modern web technologies.
+Built with ~~❤️~~ (100% AI to be honest, including this readme) using Next.js, Electron, and modern web technologies.
